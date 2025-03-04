@@ -1,22 +1,23 @@
-<div class = "container">
-    <from action ="">
-        <div class = "mb-3">
-            <label for ="searchReve" class= "form-label">
-                Search for Reve:
+<div class="container">
+    <form action="">
+        <div class="mb-3">
+            <label for="searchReve" class="form-label">
+                Search for Movie:
             </label>
-            <input type="text" class="form-control" name-"searchReve"/>
+            <input type="text" class="form-control" name="searchReve"/>
         </div>
-        <buttom type = "submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-primary">Search</button>
     </form> 
-    <p> Searching for {{searchTerm}}</p>
-        {% for movie in movie%}
-            <h2>{{reve.tittle}}</h2>
-            <h3>{{reve.description}}</h3>
-            <img src =" {{ reve.image.url}} ">
-            {% if reve.url %}
-                <a href = "{{ reve.url }}"> Reve Link </a>
-            {% endif %}
-        {%endfor%}
+    <p>Searching for {{ searchTerm }}</p>
+
+    {% for reve in reves %}
+        <h2>{{ reve.title }}</h2>
+        <h3>{{ reve.description }}</h3>
+        <img src="{{ reve.image.url }}" alt="{{ reve.title }}">
+        {% if reve.url %}
+            <a href="{{ reve.url }}">Movie Link</a>
+        {% endif %}
+    {% endfor %}
+
     <br/>
 </div>
- 
