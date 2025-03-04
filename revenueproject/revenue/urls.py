@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from reve import views as reveViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('',reveViews.home),
 ]
