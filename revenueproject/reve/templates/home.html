@@ -1,2 +1,22 @@
-<h1>Welcome home page</h1>
-<h2>Dali y bambuco mis novios</h2>
+<div class = "container">
+    <from action ="">
+        <div class = "mb-3">
+            <label for ="searchReve" class= "form-label">
+                Search for Reve:
+            </label>
+            <input type="text" class="form-control" name-"searchReve"/>
+        </div>
+        <buttom type = "submit" class="btn btn-primary">Search</button>
+    </form> 
+    <p> Searching for {{searchTerm}}</p>
+        {% for movie in movie%}
+            <h2>{{reve.tittle}}</h2>
+            <h3>{{reve.description}}</h3>
+            <img src =" {{ reve.image.url}} ">
+            {% if reve.url %}
+                <a href = "{{ reve.url }}"> Reve Link </a>
+            {% endif %}
+        {%endfor%}
+    <br/>
+</div>
+ 
