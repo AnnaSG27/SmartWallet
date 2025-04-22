@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-4 animate__animated animate__fadeIn">
+        <h1 class="display-4" style="color: #845ec2;">¡Hola, {{ request.user.username }}! 👋</h1>
+        <p class="lead">Tu billetera inteligente está lista para ayudarte</p>
+        <div class="welcome-border"></div>
+    </div>
+
+    <div class="card shadow-lg">
+        <div class="card-header" style="background-color: #ff6f91;">
+            <h5 class="card-title mb-0 text-white"><i class="fas fa-star me-2"></i>Menú Principal</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="list-group">
+                        <a href="{% url 'home' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-home me-2"></i>Inicio
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-info-circle me-2"></i>Acerca de
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-envelope me-2"></i>Contacto
+                        </a>
+                        <a href="{% url 'educacion_financiera' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-graduation-cap me-2"></i>Educación Financiera
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-chart-bar me-2"></i>Reportes
+                        </a>
+                        <a href="{% url 'perfil' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-user-circle me-2"></i>Mi Perfil
+                        </a>
+                        <a href="{% url 'bolsillos' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-wallet me-2"></i>Bolsillos
+                        </a>
+                        <a href="{% url 'comparacion_bancos' %}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-university me-2"></i>Comparación de Bancos
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-exchange-alt me-2"></i>Transacciones
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-money-bill-wave me-2"></i>Retiros
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <i class="fas fa-coins me-2"></i>Ahorros
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-9">
+                    <div class="row mb-4">
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 hover-effect">
+                                <div class="card-header text-white" style="background-color: #ff9671;">
+                                    <h5 class="card-title"><i class="fas fa-robot me-2"></i>Asistente Financiero</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">Obtén consejos personalizados de IA sobre tus finanzas.</p>
+                                    <a href="{% url 'asistente' %}" class="btn btn-hover" style="background-color: #ff9671;">
+                                        <i class="fas fa-play me-1"></i>Usar ahora
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 hover-effect">
+                                <div class="card-header text-white" style="background-color: #ff6f91;">
+                                    <h5 class="card-title"><i class="fas fa-image me-2"></i>Infografías</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">Genera imágenes explicativas de conceptos financieros.</p>
+                                    <a href="{% url 'imagen_concepto' %}" class="btn btn-hover" style="background-color: #ff6f91;">
+                                        <i class="fas fa-magic me-1"></i>Crear infografía
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 hover-effect">
+                                <div class="card-header text-white" style="background-color: #845ec2;">
+                                    <h5 class="card-title"><i class="fas fa-lightbulb me-2"></i>Recomendaciones</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">Recibe sugerencias personalizadas basadas en IA.</p>
+                                    <a href="{% url 'recomendaciones' %}" class="btn btn-hover" style="background-color: #845ec2;">
+                                        <i class="fas fa-bolt me-1"></i>Obtener recomendaciones
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card hover-effect">
+                        <div class="card-header text-white" style="background-color: #ff9671;">
+                            <h5 class="card-title"><i class="fas fa-chart-pie me-2"></i>Resumen Financiero</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-wallet me-2"></i>Balance Actual</h6>
+                                    <p class="display-6">$4,250.00</p>
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar" role="progressbar" style="width: 65%; background-color: #ff6f91;"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-bullseye me-2"></i>Metas Cumplidas</h6>
+                                    <p class="display-6">3/5</p>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" style="width: 60%; background-color: #845ec2;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <p class="text-center mt-3">
+                                <i class="fas fa-quote-left me-2"></i>
+                                Bienvenido a SmartWallet, tu aliado en el manejo inteligente de finanzas
+                                <i class="fas fa-quote-right ms-2"></i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-4 mb-5">
+    <a href="{% url 'logout' %}" class="btn btn-danger btn-lg">
+        <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+    </a>
+</div>
+
+<style>
+    .list-group-item {
+        transition: all 0.3s ease;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 500;
+    }
+    
+    .list-group-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .hover-effect:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-hover {
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+    
+    .btn-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+    
+    .welcome-border {
+        height: 3px;
+        width: 100px;
+        background: linear-gradient(to right, #ff9671, #ff6f91, #845ec2);
+        margin: 15px auto;
+        border-radius: 3px;
+    }
+    
+    .animate__animated {
+        animation-duration: 1s;
+    }
+</style>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+<script>
+    document.querySelectorAll('.list-group-item').forEach(item => {
+        item.addEventListener('mouseover', () => {
+            item.style.backgroundColor = '#ff6f91';
+            item.style.color = '#fff';
+            item.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+        });
+        item.addEventListener('mouseout', () => {
+            item.style.backgroundColor = '';
+            item.style.color = '';
+            item.style.boxShadow = '';
+        });
+    });
+</script>
+{% endblock %}

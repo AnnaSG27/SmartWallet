@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header p-0 border-0">
+                    <ul class="nav nav-tabs nav-justified" id="profileTabs" role="tablist" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%); border-radius: 10px 10px 0 0;">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="personal-tab" data-bs-toggle="tab" href="#personal" role="tab">
+                                <i class="fas fa-user-circle me-2"></i>Información Personal
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="password-tab" data-bs-toggle="tab" href="#password" role="tab">
+                                <i class="fas fa-lock me-2"></i>Seguridad
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="card-body">
+                    <div class="tab-content" id="profileTabsContent">
+                        <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                            <form method="post" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <div class="row g-3">
+                                    {% for field in perfil_form %}
+                                    <div class="col-md-6">
+                                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                        {% for error in field.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ error }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button type="submit" name="actualizar_perfil" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Guardar Cambios
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="tab-pane fade" id="password" role="tabpanel">
+                            <div class="alert alert-info" style="background-color: rgba(132, 94, 194, 0.1); border-left: 4px solid var(--primary-color);">
+                                <i class="fas fa-info-circle me-2"></i>Para cambiar tu contraseña, ingresa la actual y luego la nueva.
+                            </div>
+                            
+                            <form method="post" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <div class="row g-3">
+                                    {% for field in password_form %}
+                                    <div class="col-12">
+                                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                        <div class="input-group">
+                                            {{ field }}
+                                            <button class="btn btn-outline-secondary toggle-password" type="button">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        {% if field.help_text %}
+                                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                                        {% endif %}
+                                        {% for error in field.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ error }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button type="submit" name="cambiar_password" class="btn btn-primary">
+                                        <i class="fas fa-key me-2"></i>Cambiar Contraseña
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary-color: #845ec2;
+        --secondary-color: #ff6f91;
+        --accent-color: #ff9671;
+        --light-color: #FFDB99;
+    }
+    
+    .nav-tabs {
+        border-bottom: none;
+    }
+    
+    .nav-tabs .nav-link {
+        color: rgba(255, 255, 255, 0.9);
+        border: none;
+        padding: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0;
+        margin: 0;
+    }
+    
+    .nav-tabs .nav-link:hover {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+    
+    .nav-tabs .nav-link.active {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.2);
+        font-weight: 600;
+        border-bottom: 3px solid var(--light-color);
+    }
+    
+    .nav-tabs .nav-link.active i {
+        color: var(--light-color);
+    }
+    
+    .form-control {
+        border-radius: 8px;
+        padding: 10px 15px;
+        border: 1px solid #e0e0e0;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(132, 94, 194, 0.25);
+    }
+    
+    .toggle-password {
+        border-radius: 0 8px 8px 0;
+        border-left: none;
+        color: var(--primary-color);
+    }
+    
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        padding: 10px 25px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background-color: #7645c0;
+        border-color: #7645c0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-warning {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        color: white;
+        padding: 10px 25px;
+        border-radius: 8px;
+    }
+    
+    .btn-warning:hover {
+        background-color: #ff855c;
+        border-color: #ff855c;
+        color: white;
+    }
+    
+    .invalid-feedback {
+        color: #dc3545;
+    }
+    
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+        border: none;
+    }
+    
+    .card-header {
+        padding: 0;
+    }
+    
+    .nav-tabs {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    }
+</style>
+
+<script>
+    document.querySelectorAll('.toggle-password').forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.parentNode.querySelector('input');
+            const icon = this.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+    });
+    
+    (function () {
+        'use strict'
+        
+        var forms = document.querySelectorAll('.needs-validation')
+        
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
+{% endblock %}
