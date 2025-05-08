@@ -19,9 +19,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-4ioo(zozel0e@xvg)-5owzl=4v*c^3^e5zs2$c*-qs+zkx^h8&'
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'https://smartwallet-tc25.onrender.com/', 
+    'localhost',  
+    '127.0.0.1',
+]
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
@@ -38,7 +42,8 @@ INSTALLED_APPS = [
 ]
 
 
-MIDDLEWARE = [
+MIDDLEWARE = [,
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -70,24 +75,26 @@ TEMPLATES = [
 WSGI_APPLICATION = 'smartwallet.wsgi.application'
 
 DATABASES = {
-'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+    )
 }
 
-
-#DATABASES = {    
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': 'bufhoonj2qiypujpk7yp',  
-#        'USER': 'uhzypnqfsumppely',      
-#        'PASSWORD': '8HsLr6QsZu3cgVQymjsV',  
-#        'HOST': 'bufhoonj2qiypujpk7yp-mysql.services.clever-cloud.com',  
-#        'PORT': '3306',                  
-#        'OPTIONS': {
-#            'charset': 'utf8mb4',        
-#            'ssl_mode': 'DISABLED'      
-#        }
-#    }
-#}
+DATABASES = {    
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bufhoonj2qiypujpk7yp',  
+        'USER': 'uhzypnqfsumppely',      
+        'PASSWORD': '8HsLr6QsZu3cgVQymjsV',  
+        'HOST': 'bufhoonj2qiypujpk7yp-mysql.services.clever-cloud.com',  
+        'PORT': '3306',                  
+        'OPTIONS': {
+            'charset': 'utf8mb4',        
+            'ssl_mode': 'DISABLED'      
+        }
+    }
+}
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  
 CACHES = {
@@ -153,6 +160,20 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
 ]
 
+# Configuración de cookies y HTTPS (obligatorio en Render)
+CSRF_COOKIE_SECURE = True  # Solo enviar CSRF sobre HTTPS
+SESSION_COOKIE_SECURE = True  # Solo enviar sesiones sobre HTTPS
+SECURE_SSL_REDIRECT = True  # Redirigir HTTP a HTTPS (Render lo maneja)
+
+CORS_ALLOWED_ORIGINS = [
+    "https://smartwallet-tc25.onrender.com/",
+    "http://localhost:8000",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://smartwallet-tc25.onrender.com/",
+]
+
 CORS_ALLOW_CREDENTIALS = True
 
 LANGUAGE_CODE = 'en-us'
@@ -165,4 +186,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
