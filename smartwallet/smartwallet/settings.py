@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import os
+import dj_database_url
 
 from pathlib import Path
 
@@ -68,19 +70,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'smartwallet.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bufhoonj2qiypujpk7yp',  
-        'USER': 'uhzypnqfsumppely',      
-        'PASSWORD': '8HsLr6QsZu3cgVQymjsV',  
-        'HOST': 'bufhoonj2qiypujpk7yp-mysql.services.clever-cloud.com',  
-        'PORT': '3306',                  
-        'OPTIONS': {
-            'charset': 'utf8mb4',        
-            'ssl_mode': 'DISABLED'      
-        }
-    }
+'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
+
+
+#DATABASES = {    
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'bufhoonj2qiypujpk7yp',  
+#        'USER': 'uhzypnqfsumppely',      
+#        'PASSWORD': '8HsLr6QsZu3cgVQymjsV',  
+#        'HOST': 'bufhoonj2qiypujpk7yp-mysql.services.clever-cloud.com',  
+#        'PORT': '3306',                  
+#        'OPTIONS': {
+#            'charset': 'utf8mb4',        
+#            'ssl_mode': 'DISABLED'      
+#        }
+#    }
+#}
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  
 CACHES = {
@@ -158,3 +165,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
