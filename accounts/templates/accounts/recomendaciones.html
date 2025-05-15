@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-center py-3" style="background: linear-gradient(135deg, #ff9671 0%, #ff6f91 100%); color: white;">
+                    <h3 class="mb-1"><i class="fas fa-piggy-bank me-2"></i>Recomendaciones Financieras</h3>
+                    <p class="mb-0 opacity-75">Obtén consejos personalizados para tu situación</p>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form id="recomendacionesForm" class="mb-4">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="consulta" class="form-label fw-bold">Describe tu objetivo:</label>
+                            <textarea class="form-control rounded-3" 
+                                   id="consulta" name="consulta" rows="3"
+                                   placeholder="Ej: Quiero ahorrar $500 mensuales pero gasto mucho en entretenimiento..."
+                                   required></textarea>
+                            <small class="text-muted mt-2 d-block">Ejemplos: "Cómo reducir deudas", "Invertir mis ahorros"</small>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary rounded-pill w-100 py-2" id="generate-btn">
+                            <i class="fas fa-lightbulb me-2"></i>Obtener recomendaciones
+                        </button>
+                    </form>
+
+                    <div id="result-container" class="text-center" style="display: none;">
+                        <div id="loading-section" class="py-4">
+                            <div class="spinner-border" style="color: #ff6f91;"></div>
+                            <p class="mt-2">Generando recomendaciones...</p>
+                            <div class="progress mt-3" style="height: 6px;">
+                                <div id="timeout-bar" class="progress-bar" role="progressbar" style="width: 0%; background-color: #ff9671;"></div>
+                            </div>
+                        </div>
+                        
+                        <div id="results-section" style="display: none;">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header text-white" style="background: linear-gradient(135deg, #ff9671 0%, #ff6f91 100%);">
+                                    <h5 class="mb-0"><i class="fas fa-star me-2"></i>Recomendaciones para ti</h5>
+                                </div>
+                                <div class="card-body text-start">
+                                    <ul id="recomendacionesList" class="list-unstyled">
+                                    </ul>
+                                    <div class="alert alert-light mt-3">
+                                        <small id="fuenteInfo" class="text-muted"></small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-center gap-3 mt-4">
+                                <button id="copy-btn" class="btn btn-download rounded-pill px-4">
+                                    <i class="fas fa-copy me-2"></i> Copiar
+                                </button>
+                                <button id="retry-btn" class="btn btn-regenerate rounded-pill px-4">
+                                    <i class="fas fa-redo me-2"></i> Nueva consulta
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="error-section" class="alert alert-danger mt-3" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-primary {
+        background: linear-gradient(135deg, #ff9671 0%, #ff6f91 100%);
+        border: none;
+        color: white;
+        font-weight: 500;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #ff855c 0%, #ff5c7f 100%);
+    }
+    
+    .btn-download {
+        background: linear-gradient(135deg, #ff9671 0%, #ff6f91 100%);
+        color: white;
+        border: none;
+    }
+    
+    .btn-download:hover {
+        background: linear-gradient(135deg, #ff855c 0%, #ff5c7f 100%);
+    }
+    
+    .btn-regenerate {
+        background: #ff6f91;
+        color: white;
+        border: none;
+    }
+    
+    .btn-regenerate:hover {
+        background: #845ec2;
+    }
+    
+    textarea.form-control {
+        border: 2px solid #ffccd5;
+        transition: all 0.3s;
+    }
+    
+    textarea.form-control:focus {
+        border-color: #ff6f91;
+        box-shadow: 0 0 0 0.25rem rgba(255, 111, 145, 0.25);
+    }
+    
+    #recomendacionesList li {
+        padding: 10px 0;
+        border-bottom: 1px solid #f8f9fa;
+        font-size: 1.05rem;
+    }
+    
+    #recomendacionesList li:last-child {
+        border-bottom: none;
+    }
+    
+    .card-header {
+        border-radius: 0 !important;
+    }
+    
+    @keyframes magicPulse {
+        0% { box-shadow: 0 0 0 0 rgba(255, 111, 145, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(255, 111, 145, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 111, 145, 0); }
+    }
+</style>
+
+<script>
+document.getElementById('recomendacionesForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const consulta = document.getElementById('consulta').value.trim();
+    if (!consulta) return;
+    
+    const resultContainer = document.getElementById('result-container');
+    const loadingSection = document.getElementById('loading-section');
+    const resultsSection = document.getElementById('results-section');
+    const errorSection = document.getElementById('error-section');
+    const generateBtn = document.getElementById('generate-btn');
+    
+    resultContainer.style.display = 'block';
+    loadingSection.style.display = 'block';
+    resultsSection.style.display = 'none';
+    errorSection.style.display = 'none';
+    errorSection.textContent = '';
+    generateBtn.disabled = true;
+    
+    let progress = 0;
+    const progressBar = document.getElementById('timeout-bar');
+    const progressInterval = setInterval(() => {
+        progress += 5;
+        progressBar.style.width = `${Math.min(progress, 100)}%`;
+    }, 300);
+
+    try {
+        const formData = new FormData(this);
+        const response = await fetch(window.location.pathname, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+            }
+        });
+        
+        clearInterval(progressInterval);
+        progressBar.style.width = '100%';
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Error desconocido');
+        }
+        
+        const listElement = document.getElementById('recomendacionesList');
+        const sourceElement = document.getElementById('fuenteInfo');
+        
+        listElement.innerHTML = '';
+        data.recomendaciones.forEach(item => {
+            const li = document.createElement('li');
+            li.innerHTML = `<i class="fas fa-check-circle me-2" style="color: #ff6f91;"></i>${item}`;
+            listElement.appendChild(li);
+        });
+        
+        sourceElement.textContent = `Fuente: ${data.fuente} | ${new Date().toLocaleString()}`;
+        
+        loadingSection.style.display = 'none';
+        resultsSection.style.display = 'block';
+        
+        document.getElementById('copy-btn').addEventListener('click', function() {
+            const textToCopy = data.recomendaciones.join('\n');
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-check me-2"></i>Copiado!';
+                setTimeout(() => {
+                    this.innerHTML = originalText;
+                }, 2000);
+            });
+        });
+
+    } catch (error) {
+        clearInterval(progressInterval);
+        loadingSection.style.display = 'none';
+        errorSection.textContent = error.message;
+        errorSection.style.display = 'block';
+    } finally {
+        generateBtn.disabled = false;
+    }
+});
+
+document.getElementById('retry-btn').addEventListener('click', function() {
+    document.getElementById('consulta').value = '';
+    document.getElementById('consulta').focus();
+    document.getElementById('result-container').style.display = 'none';
+});
+
+document.getElementById('generate-btn').addEventListener('mouseover', function() {
+    this.querySelector('i').style.animation = 'magicPulse 1.5s infinite';
+});
+
+document.getElementById('generate-btn').addEventListener('mouseout', function() {
+    this.querySelector('i').style.animation = '';
+});
+</script>
+
+{% endblock %}

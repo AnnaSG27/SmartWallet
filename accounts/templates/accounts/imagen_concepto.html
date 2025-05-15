@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header text-center py-3" style="background: linear-gradient(135deg, #ff9671 0%, #ff6f91 100%); color: white;">
+                    <h3 class="mb-1"><i class="fas fa-image me-2"></i>Generador de Infografías</h3>
+                    <p class="mb-0 opacity-75">Visualiza conceptos financieros</p>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form id="imagen-form" class="mb-4">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" class="form-control rounded-pill" 
+                                   id="concepto" name="concepto" 
+                                   placeholder="Ej: Ahorro, Inflación, Inversión, Interés Compuesto..."
+                                   required>
+                            <button type="submit" class="btn btn-primary rounded-pill ms-2" id="generate-btn">
+                                <i class="fas fa-wand-magic-sparkles me-2"></i>Generar
+                            </button>
+                        </div>
+                        <small class="text-muted mt-2 d-block">Ejemplos: "Ahorro para emergencias", "Plan de inversión"</small>
+                    </form>
+
+                    <div id="result-container" class="text-center" style="display: none;">
+                        <div id="loading-section" class="py-4">
+                            <div class="spinner-border text-primary" style="color: #ff6f91 !important;"></div>
+                            <p class="mt-2">Generando infografía...</p>
+                            <div class="progress mt-3" style="height: 6px;">
+                                <div id="timeout-bar" class="progress-bar" role="progressbar" style="width: 0%; background-color: #ff9671;"></div>
+                            </div>
+                        </div>
+                        
+                        <div id="image-section" style="display: none;">
+                            <img id="generated-image" src="" class="img-fluid rounded shadow mb-3" style="max-height: 60vh;">
+                            <div class="d-flex justify-content-center gap-3">
+                                <button id="download-btn" class="btn btn-download rounded-pill px-4">
+                                    <i class="fas fa-download me-2"></i> Descargar
+                                </button>
+                                <button id="retry-btn" class="btn btn-regenerate rounded-pill px-4">
+                                    <i class="fas fa-redo me-2"></i> Regenerar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="error-section" class="alert alert-danger mt-3" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-primary {
+        background: linear-gradient(135deg, #ff9671 0%, #ff6f91 100%);
+        border: none;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #ff855c 0%, #ff5c7f 100%);
+    }
+    
+    .btn-download {
+        background: linear-gradient(135deg, #ff9671 0%, #ff6f91 100%);
+        color: white;
+        border: none;
+    }
+    
+    .btn-download:hover {
+        background: linear-gradient(135deg, #ff855c 0%, #ff5c7f 100%);
+    }
+    
+    .btn-regenerate {
+        background: #ff6f91;
+        color: white;
+        border: none;
+    }
+    
+    .btn-regenerate:hover {
+        background: #845ec2;
+    }
+    
+    .image-container {
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    input.form-control {
+        border: 2px solid #ffccd5;
+    }
+    
+    input.form-control:focus {
+        border-color: #ff6f91;
+        box-shadow: 0 0 0 0.25rem rgba(255, 111, 145, 0.25);
+    }
+</style>
+
+<script>
+document.getElementById('imagen-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const concepto = document.getElementById('concepto').value.trim();
+    if (!concepto) return;
+    
+    const resultContainer = document.getElementById('result-container');
+    const loadingSection = document.getElementById('loading-section');
+    const imageSection = document.getElementById('image-section');
+    const errorSection = document.getElementById('error-section');
+    const generateBtn = document.getElementById('generate-btn');
+    
+    resultContainer.style.display = 'block';
+    loadingSection.style.display = 'block';
+    imageSection.style.display = 'none';
+    errorSection.style.display = 'none';
+    errorSection.textContent = '';
+    generateBtn.disabled = true;
+    
+    let progress = 0;
+    const progressBar = document.getElementById('timeout-bar');
+    const progressInterval = setInterval(() => {
+        progress += 5;
+        progressBar.style.width = `${Math.min(progress, 100)}%`;
+    }, 500);
+
+    try {
+        const response = await fetch("{% url 'imagen_concepto' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: `concepto=${encodeURIComponent(concepto)}`
+        });
+        
+        clearInterval(progressInterval);
+        progressBar.style.width = '100%';
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Error desconocido');
+        }
+        
+        const imageElement = document.getElementById('generated-image');
+        imageElement.src = data.imagen_url;
+        imageElement.alt = `Infografía sobre ${concepto}`;
+        
+        imageElement.onload = () => {
+            loadingSection.style.display = 'none';
+            imageSection.style.display = 'block';
+        };
+        
+        document.getElementById('download-btn').addEventListener('click', function() {
+            const link = document.createElement('a');
+            link.href = data.imagen_url;
+            link.download = `infografia_${concepto.toLowerCase().replace(/\s+/g, '_')}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+    } catch (error) {
+        clearInterval(progressInterval);
+        loadingSection.style.display = 'none';
+        errorSection.textContent = error.message;
+        errorSection.style.display = 'block';
+    } finally {
+        generateBtn.disabled = false;
+    }
+});
+
+document.getElementById('retry-btn').addEventListener('click', function() {
+    document.getElementById('imagen-form').dispatchEvent(new Event('submit'));
+});
+
+document.getElementById('generate-btn').addEventListener('mouseover', function() {
+    this.querySelector('i').style.animation = 'magicPulse 1.5s infinite';
+});
+
+document.getElementById('generate-btn').addEventListener('mouseout', function() {
+    this.querySelector('i').style.animation = '';
+});
+</script>
+
+<style>
+    @keyframes magicPulse {
+        0% { box-shadow: 0 0 0 0 rgba(255, 111, 145, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(255, 111, 145, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 111, 145, 0); }
+    }
+</style>
+{% endblock %}
