@@ -19,12 +19,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-4ioo(zozel0e@xvg)-5owzl=4v*c^3^e5zs2$c*-qs+zkx^h8&'
 
-DEBUG = True
 DEBUG = False
 
-ALLOWED_HOSTS = []
+
 ALLOWED_HOSTS = [
-    'https://smartwallet-tc25.onrender.com/', 
+    'smartwallet-tc25.onrender.com', 
     'localhost',  
     '127.0.0.1',
 ]
@@ -36,10 +35,9 @@ SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 
 MIDDLEWARE = [
-MIDDLEWARE = [,
-    'whitenoise.middleware.WhiteNoiseMiddleware', 
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 @@ -70,24 +75,26 @@
 WSGI_APPLICATION = 'smartwallet.wsgi.application'
@@ -53,20 +51,6 @@ DATABASES = {
 }
 
 
-#DATABASES = {    
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': 'bufhoonj2qiypujpk7yp',  
-#        'USER': 'uhzypnqfsumppely',      
-#        'PASSWORD': '8HsLr6QsZu3cgVQymjsV',  
-#        'HOST': 'bufhoonj2qiypujpk7yp-mysql.services.clever-cloud.com',  
-#        'PORT': '3306',                  
-#        'OPTIONS': {
-#            'charset': 'utf8mb4',        
-#            'ssl_mode': 'DISABLED'      
-#        }
-#    }
-#}
 DATABASES = {    
     'default': {
         'ENGINE': 'django.db.backends.mysql',
