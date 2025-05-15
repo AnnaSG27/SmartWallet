@@ -19,8 +19,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-4ioo(zozel0e@xvg)-5owzl=4v*c^3^e5zs2$c*-qs+zkx^h8&'
 
+DEBUG = True
 DEBUG = False
 
+ALLOWED_HOSTS = []
 ALLOWED_HOSTS = [
     'https://smartwallet-tc25.onrender.com/', 
     'localhost',  
@@ -29,58 +31,42 @@ ALLOWED_HOSTS = [
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'accounts',
-    'corsheaders',  
+@@ -38,7 +42,8 @@
 ]
 
 
 MIDDLEWARE = [
+MIDDLEWARE = [,
     'whitenoise.middleware.WhiteNoiseMiddleware', 
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-ROOT_URLCONF = 'smartwallet.urls'
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
-
+@@ -70,24 +75,26 @@
 WSGI_APPLICATION = 'smartwallet.wsgi.application'
 
 DATABASES = {
+'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
         conn_max_age=600,
     )
 }
 
+
+#DATABASES = {    
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'bufhoonj2qiypujpk7yp',  
+#        'USER': 'uhzypnqfsumppely',      
+#        'PASSWORD': '8HsLr6QsZu3cgVQymjsV',  
+#        'HOST': 'bufhoonj2qiypujpk7yp-mysql.services.clever-cloud.com',  
+#        'PORT': '3306',                  
+#        'OPTIONS': {
+#            'charset': 'utf8mb4',        
+#            'ssl_mode': 'DISABLED'      
+#        }
+#    }
+#}
 DATABASES = {    
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -98,65 +84,7 @@ DATABASES = {
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    }
-}
-
-LOGGING = {
-    'version': 1,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-        },
-    },
-}
-
-OPENAI_API_KEY = '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'  
-OPENAI_MODEL = "gpt-3.5-turbo"             
-IMAGE_MODEL = "dall-e-2"                   
-MAX_TOKENS = 150   
-
-HUGGINGFACE_API_KEY = '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'  
-HUGGINGFACE_MODEL = "gpt2"                 
-
-DEEPAI_API_KEY = '5804d93c-b047-403a-bc76-58f459ea6352'    
-
-RECOMMENDATION_ALGORITHM = "knn"        
-
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-]
-
-CSRF_COOKIE_SECURE = False  
-CSRF_COOKIE_HTTPONLY = True
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:8000",
+@@ -153,6 +160,20 @@
     "http://127.0.0.1:8000",
 ]
 
@@ -177,14 +105,10 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
+@@ -165,4 +186,5 @@
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
