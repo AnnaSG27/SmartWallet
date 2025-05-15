@@ -45,20 +45,17 @@ DATABASES = {
 }
 
 
-DATABASES = {    
+DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bufhoonj2qiypujpk7yp',  
-        'USER': 'uhzypnqfsumppely',      
-        'PASSWORD': '8HsLr6QsZu3cgVQymjsV',  
-        'HOST': 'bufhoonj2qiypujpk7yp-mysql.services.clever-cloud.com',  
-        'PORT': '3306',                  
-        'OPTIONS': {
-            'charset': 'utf8mb4',        
-            'ssl_mode': 'DISABLED'      
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'smartwalletdb',
+        'USER': 'smartwalletdb_user',
+        'PASSWORD': 'sAiVLJruw0IEEt5ZPzzSXCwhTp8ZNb4m',
+        'HOST': 'dpg-d0e0su15pdvs73aksfhg-a',
+        'PORT': '5432',
     }
 }
+
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  
 CACHES = {
