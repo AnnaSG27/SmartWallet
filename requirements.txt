@@ -1,7 +1,4 @@
-django
-django-cors-headers
 django-sslserver
-python-dotenv
 annotated-types==0.7.0
 anyio==4.9.0
 asgiref==3.8.1
@@ -54,8 +51,6 @@ typing_extensions==4.13.0
 tzdata==2025.1
 urllib3==2.3.0
 waitress==3.0.2
-Django==5.1.6
 gunicorn==21.2.0
 whitenoise==6.6.0
-dj-database-url==2.1.0
 corsheaders==4.3.1
