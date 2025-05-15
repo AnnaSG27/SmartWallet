@@ -50,3 +50,4 @@ typing_extensions==4.13.0
 tzdata==2025.1
 urllib3==2.3.0
 waitress==3.0.2
+gunicorn==20.1.0
