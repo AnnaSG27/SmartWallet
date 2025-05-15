@@ -38,7 +38,7 @@ WSGI_APPLICATION = 'smartwallet.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
+        default='postgresql://smartwalletdb_user:sAiVLJruw0IEEt5ZPzzSXCwhTp8ZNb4m@dpg-d0e0su15pdvs73aksfhg-a.oregon-postgres.render.com/smartwalletdb',
         conn_max_age=600,
         ssl_require=True
     )
